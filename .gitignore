@@ -1,0 +1,14 @@
+/outdata
+/userdir
+/indata
+/slurm-logs
+/output
+/massblaster_plutof_rel
+
+format-output-old.py
+WID-MassBLASTer-ITS_260413.sh
+massblaster.sif
+massblaster_plutof.def
+
+
+
