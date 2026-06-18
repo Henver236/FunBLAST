@@ -1,14 +1,16 @@
 # FunBLAST - ITS pipeline #
 
-## Disclaimer 
-This software is a custom adaptation of the TU‑NHM/massblaster_plutof_pub pipeline. By using it, you agree to comply with the original project's licensing terms as set forth by its creator, Kessy Abarenkov for the Biodiversity Informatics research group of Tartu Univeristy.  
+## Disclaimer  
+
+This software is greatly inspired by MassBLASTer PlutoF pipeline, developped by Kessy Abarenkov for UNITE PlutoF Biodiversity cloud Workbench (Biodiversity Informatics research group of Tartu Univeristy).  
 Here is the adresse of the original project:  
 https://github.com/TU-NHM/massblaster_plutof_pub   
-The author of this version provides the code “as‑is” and makes no warranties regarding its performance, accuracy, or suitability for any particular purpose. Consequently, the author cannot be held responsible for the quality, correctness, or any consequences arising from the results generated with this pipeline. Users assume all risk associated with its deployment and should verify outputs independently before relying on them.
+
+The author of this version provides the code “as‑is” and makes no warranties regarding its performance, accuracy, or suitability for any particular purpose. Consequently, the author cannot be held responsible for the quality, correctness, or any consequences arising from the results generated with this pipeline. Users assume all risk associated with its deployment and should verify outputs independently before relying on them. FunBLAST is 
 
 ## Introduction
 
-This pipeline is designed to run BLASTn on a large number of ITS fungal sequences gathered in a FASTA file (.fas), using ITS databases such as UNITE, INSD or NCBI.
+FunBLAST is designed to run BLASTn on a large number of ITS fungal sequences gathered in a FASTA file (.fas), using ITS databases such as UNITE, INSD or NCBI and produce JSON, CSV and HTML files with results.
 
 It work in three steps :
    - Check the number and the size of input files. It check the number of nucleotides to alocate ressources accordingly (CPU, RAM, and time).
@@ -22,6 +24,12 @@ The output consists of a dynamic HTML page that allows you to browse the results
 The pipeline keeps and display the three best hits by default but it can be customized to anything between 1 and 100 hits per query. 
 
 ---
+
+## Pre-requisites
+
+   - Apptainer --> Container builder and manager. FunBLAST execute BLAST in a container. 
+   - SLURM --> Ressources scheduler for HPC cluter. FunBLAST is design to run on cluster. It's possible to modify the code to run it locally.
+   - (Optional) BLAST+ --> To create new BLAST database from any sources. 
 
 ## Expected Inputs & parsing
 
