@@ -10,5 +10,6 @@ WID-MassBLASTer-ITS_260413.sh
 massblaster.sif
 massblaster_plutof.def
 
-
+run_massblaster_pipeline_progress.sh
+submit_massblaster_progress.sh
 

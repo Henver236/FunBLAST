@@ -5,15 +5,15 @@ This software is a custom adaptation of the TU‑NHM/massblaster_plutof_pub pipe
 https://github.com/Henver236/MassBLASTer_ITS/tree/main/massblaster_plutof_pub  
 Here is the adresse of the original project:  
 https://github.com/TU-NHM/massblaster_plutof_pub   
-The author of this customized version provides the code “as‑is” and makes no warranties regarding its performance, accuracy, or suitability for any particular purpose. Consequently, the author cannot be held responsible for the quality, correctness, or any consequences arising from the results generated with this pipeline. Users assume all risk associated with its deployment and should verify outputs independently before relying on them.
+The author of this version provides the code “as‑is” and makes no warranties regarding its performance, accuracy, or suitability for any particular purpose. Consequently, the author cannot be held responsible for the quality, correctness, or any consequences arising from the results generated with this pipeline. Users assume all risk associated with its deployment and should verify outputs independently before relying on them.
 
 ## Introduction
 
 This pipeline is designed to run BLASTn on a large number of sequences gathered in a FASTA file (.fas), using ITS databases such as UNITE or INSD.
 
-The output consists of a dynamic HTML page that allows you to view the results, as well as a CSV file (.csv).
+The output consists of a dynamic HTML page that allows you to browse the results, and a CSV file (.csv).
 
-The pipeline keeps the three best hits.
+The pipeline keeps and display the three best hits by default but it can be customized 10 or 100 hits per query. 
 
 ---
 

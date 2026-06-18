@@ -109,7 +109,7 @@ while true; do
 
     # Job ended or disappeared 
     if [ -z "$STATUS" ]; then
-        echo -e "\n[INFO] Job $JOB_ID finished."
+        echo -e "\n[WARNING] Job $JOB_ID already ended or crash."
         break
     fi
 

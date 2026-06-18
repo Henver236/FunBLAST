@@ -381,4 +381,4 @@ with open(CSV_OUT,"w",newline="") as f:
     writer.writerow(csv_header)
     writer.writerows(csv_rows)
 
-print("DONE")
+print("DONE", flush=True)

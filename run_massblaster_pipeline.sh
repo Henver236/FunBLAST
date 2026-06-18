@@ -35,7 +35,7 @@ apptainer exec massblaster.sif blastn \
     -task megablast \
     -num_threads "$THREADS" \
     -dust no \
-    -db "$WORK_DIR/massblaster_plutof_rel/data/UNITE" \
+    -db "$WORK_DIR/massblaster_plutof_rel/data/NCBI" \
     -outfmt 15 \
     -reward 1 \
     -gapextend 2 \
