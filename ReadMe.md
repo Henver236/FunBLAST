@@ -1,8 +1,7 @@
-# MassBLATer ITS pipeline #
+# FunBLAST - ITS pipeline #
 
 ## Disclaimer 
-This software is a custom adaptation of the TU‑NHM/massblaster_plutof_pub pipeline. By using it, you agree to comply with the original project's licensing terms as set forth by its creator, Kessy Abarenkov for the Biodiversity Informatics research group of Tartu Univeristy. I dont't own any of code or ressources provided in the massblaster_plutof_pub submodule:  
-https://github.com/Henver236/MassBLASTer_ITS/tree/main/massblaster_plutof_pub  
+This software is a custom adaptation of the TU‑NHM/massblaster_plutof_pub pipeline. By using it, you agree to comply with the original project's licensing terms as set forth by its creator, Kessy Abarenkov for the Biodiversity Informatics research group of Tartu Univeristy.  
 Here is the adresse of the original project:  
 https://github.com/TU-NHM/massblaster_plutof_pub   
 The author of this version provides the code “as‑is” and makes no warranties regarding its performance, accuracy, or suitability for any particular purpose. Consequently, the author cannot be held responsible for the quality, correctness, or any consequences arising from the results generated with this pipeline. Users assume all risk associated with its deployment and should verify outputs independently before relying on them.
@@ -11,9 +10,16 @@ The author of this version provides the code “as‑is” and makes no warranti
 
 This pipeline is designed to run BLASTn on a large number of sequences gathered in a FASTA file (.fas), using ITS databases such as UNITE or INSD.
 
-The output consists of a dynamic HTML page that allows you to browse the results, and a CSV file (.csv).
+It work in three steps :
+   - Check the number and the size of input files. It check the number of nucleotides to alocate ressources accordingly (CPU, RAM, and time).
+   - It set a SLURM session with ressources and launch a BLAST on the specified database, inside a dedicated container. 
+   - It use the BLAST output to create a CSV file and a HTML page. 
 
-The pipeline keeps and display the three best hits by default but it can be customized 10 or 100 hits per query. 
+To be clear, the first step occure on login node (but it is relatively light in ressources) and the second and the third occure on computing node, inside a SLURM session. 
+
+The output consists of a dynamic HTML page that allows you to browse the results, and a CSV file (.csv) for further manipulations.
+
+The pipeline keeps and display the three best hits by default but it can be customized to anything between 1 and 100 hits per query. 
 
 ---
 
@@ -39,16 +45,16 @@ This is the naming convention used by the Fasteris laboratory. However, it's pos
 
 ## Usage
 
-1. Upload the data into a `data` folder.
-2. Transfer the file to be processed to 
-   `~/MassBLASTer_ITS/massblaster_plutof_pub/indata`
+0. Download or git clone the poject from the repo : https://github.com/Henver236/FunBLAST.git
+1. Run once `run_setup.sh`.
+2. Upload the data into a `indata` folder.
 3. Prefix the file name with `source_` 
    (e.g.: `source_My_Fasta_File.fas`)
 4. Launch the pipeline with the command:
 ```bash
-bash ~/unite-massblaster/load-scale-launcher.sh
+bash ~/FunBLAST/submit-FunBLAST.sh
 ```
-
+5. Check `output` folder for results.
 ---
 
 ## SLURM
@@ -56,9 +62,9 @@ bash ~/unite-massblaster/load-scale-launcher.sh
 By default, the pipeline runs under SLURM.
 SLURM is used to optimise and schedule ressources usage on HPC cluster.
 
-It is possible to modify the SLURM behavior or run the command locally by editing or removing the SLURM snippet at the beginning of the wrapper:
+It is possible to modify the SLURM behavior or run the command locally by editing or removing the SLURM snippet in the wrapper:
 ```bash
-~/unite-massblaster/launch-massblaster-v3.slurm.sh
+submit-massblaster.sh
 ```
 SLURM snippet looks like this :  
 ```bash
