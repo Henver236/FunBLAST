@@ -8,7 +8,7 @@ The author of this version provides the code “as‑is” and makes no warranti
 
 ## Introduction
 
-This pipeline is designed to run BLASTn on a large number of sequences gathered in a FASTA file (.fas), using ITS databases such as UNITE or INSD.
+This pipeline is designed to run BLASTn on a large number of ITS fungal sequences gathered in a FASTA file (.fas), using ITS databases such as UNITE, INSD or NCBI.
 
 It work in three steps :
    - Check the number and the size of input files. It check the number of nucleotides to alocate ressources accordingly (CPU, RAM, and time).
@@ -59,7 +59,7 @@ bash ~/FunBLAST/submit-FunBLAST.sh
 
 ## SLURM
 
-By default, the pipeline runs under SLURM.
+By default, the pipeline runs with SLURM.
 SLURM is used to optimise and schedule ressources usage on HPC cluster.
 
 It is possible to modify the SLURM behavior or run the command locally by editing or removing the SLURM snippet in the wrapper:
@@ -99,7 +99,7 @@ https://www.biob.in/2020/12/creating-custom-database-using.html
     -outfmt 15 \
     -reward 1 \
     -gapextend 2 \
-    -max_target_seqs 1 \
+    -max_target_seqs 3 \
     -penalty -2 \
     -word_size 28 \
     -gapopen 0
@@ -254,12 +254,11 @@ Possible values : Integer
 
 ---
 ### Hits limit number  
-`-max_target_seqs 1`  
+`-max_target_seqs 3`  
 Maximum number of target sequences (hits) reported for each query.  
 Default:  
-Keep only the best hit. 
-MassBLASTER returns only the best single assignment.  
-It's possible (recommanded) to customise this option to retrieve 3, 10, or more hits by query.
+Keep only the three best hits.   
+It's possible (recommanded) to customise this option to retrieve 10, or more hits by query.
 Possible values : Integer  
 
 ---
@@ -278,6 +277,19 @@ Larger = faster but less sensitive
 
 ---
 ## Files description
+#### ► submit-FunBLAST.sh  
+This is the main wrapper.  
+It will enumerate the numbre of nucleotide in the whole FASTA input file and automatically set ressources needs for BLAST, via SLURM.
+
+#### ► run-FunBLAST.sh  
+This script is launched by submit-FunBLAST.sh.  
+It will launch BLAST and give the primary output (a JSON file with a .txt extension) to format-output.py.
+
+#### ► format-output.py  
+A script that create a CSV file woth all the results and use it to create a HTML page.
+Then, this HTML page can be used to display and explore results, a little bit like a NCBI blastn results page. 
+
+### Beta version scripts (maybe not available or not working properly)
 
 #### ► update-NCBI-ITS-db.sh  
 Usefull to update manually with the last UNITE database version and convert in extensions needed by BLAST. 
@@ -291,21 +303,6 @@ This script will cut every nuclotides before the fisrt "CAT" pattern.
 It use a "sliding window" algorithm to choose where to cut the end of each sequence.
 By default, the algorithm is set with a 50 nucleotide windows and a 5% treshold. 
 It means that if there is more than 5% of ambiguous nucleotide in the 50 nucleotide window, it will cut here and discard the end of the sequence. 
-
-#### ► load-scale-launcher.sh  
-This is the main wrapper.  
-It will enumerate the numbre of nucleotide in the whole FASTA input file and automatically set ressources needs for BLAST, via SLURM.
-
-#### ► run-massblaster.sh  
-This script is launched by load-scale-launcher.sh.  
-It will launch BLAST and give the output (a JSON file with a .txt extension) to format-output.py.
-
-#### ► run-massblaster.slurm.sh  
-A wrapper to launch the pipeline with custom on a computing node when working on a HPC cluster. 
-
-#### ► format-output.py  
-A script that create a CSV file woth all the results and use it to create a HTML page.
-Then, this HTML page can be used to display and explore results, a little bit like a NCBI blastn results page.  
 
 ---
 
