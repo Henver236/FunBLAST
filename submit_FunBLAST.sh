@@ -77,7 +77,7 @@ for FILE in "${FILES[@]}"; do
         --time="$TIME" \
         --output=slurm-logs/%x_%j.out \
         --error=slurm-logs/%x_%j.err \
-        run_massblaster_pipeline.sh "$FILE"
+        run-FunBLAST.sh "$FILE"
 
     echo "[INFO] $FILE is now processed with MassBLASTer..."
 
