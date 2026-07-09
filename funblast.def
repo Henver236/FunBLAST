@@ -1,0 +1,40 @@
+BootStrap: docker
+From: ubuntu:26.04
+
+%post
+    set -e
+
+    # Update distro and install wget, libgomp1, and certificates : 
+    apt update && apt install -y \
+        wget \
+        libgomp1 \
+        ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+    # BLAST install in /opt :
+    mkdir -p /opt/blast
+    cd /opt/blast
+    # The next line need to be fixed in the futur...
+    wget --no-check-certificate https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/2.17.0/ncbi-blast-2.17.0+-x64-linux.tar.gz
+    tar -xzvf ncbi-blast-2.17.0+-x64-linux.tar.gz
+    rm ncbi-blast-2.17.0+-x64-linux.tar.gz
+
+    /opt/blast/ncbi-blast-2.17.0+/bin/blastn -version
+
+%environment
+    export LC_ALL=C
+    # Above line set the standard POSIX "C" value. It follow ASCII rules for parsing, insteed of local language set by users. 
+    # This allows for better reproducibility, regardless of user setup (for exemple : fr_FR.UTF-8, en_US.UTF-8, etc.)
+    export PATH=/opt/blast/ncbi-blast-2.17.0+/bin:$PATH
+
+%runscript
+    exec "$@"
+
+%files
+    run-FunBLAST.sh
+
+%labels
+    Author Henver236
+    Version v1.1
+    Description Apptainer container running Ubuntu v26.04 and tools like BLAST+ v2.17.0, with certificates needed to run on Gamarello HPC.
+    

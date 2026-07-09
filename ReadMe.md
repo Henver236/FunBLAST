@@ -2,13 +2,21 @@
 
 ## Disclaimer  
 
-This software is greatly inspired by MassBLASTer PlutoF pipeline, developped by Kessy Abarenkov for UNITE PlutoF Biodiversity cloud Workbench (Biodiversity Informatics research group of Tartu Univeristy).  
-Here is the adresse of the original project:  
+This software is inspired by MassBLASTer PlutoF pipeline, developped by Kessy Abarenkov for UNITE PlutoF Biodiversity cloud Workbench (Biodiversity Informatics research group of Tartu Univeristy). Here is the adresse of the PlutoF project:  
 https://github.com/TU-NHM/massblaster_plutof_pub   
 
-The author of this version provides the code “as‑is” and makes no warranties regarding its performance, accuracy, or suitability for any particular purpose. Consequently, the author cannot be held responsible for the quality, correctness, or any consequences arising from the results generated with this pipeline. Users assume all risk associated with its deployment and should verify outputs independently before relying on them. FunBLAST is 
+The author of this software provides the code “as‑is” and makes no warranties regarding its performance, accuracy, or suitability for any particular purpose. Consequently, the author cannot be held responsible for the quality, correctness, or any consequences arising from the results generated with this pipeline. Users assume all risk associated with its deployment and should verify outputs independently before relying on them. FunBLAST is 
 
-## Introduction
+## Rationale
+
+The ITS regions (ITS1 and ITS2) are widely used for biomolecular identification of fungi. 
+Nowadays, there are two main databases, each with their own sequence processing portal: UNITE and NCBI. 
+The most developed and widely used software is BLAST. However, BLAST works on the NCBI database by default, whereas UNITE has become a reference when it comes to ITS sequence taxonomic assignment. 
+Moreover, it has become very clear today, in the global context, that researchers need local and open resources, not subject to a political agenda. 
+
+FunBLAST provides a way to blast a large number of ITS sequences against the UNITE database (or NCBI "from type material" database), in the style of the NCBI BLASTn web page, with local and updatable database files and a locally hosted BLAST algorithm.
+
+## Description
 
 FunBLAST is designed to run BLASTn on a large number of ITS fungal sequences gathered in a FASTA file (.fas), using ITS databases such as UNITE, INSD or NCBI and produce JSON, CSV and HTML files with results.
 
@@ -40,22 +48,22 @@ The expected sequence‑name format is:
 <SAMPLE_ID>_<YYMMDD>-<SAMPLE_CODE>[_<OPTIONAL_INFO>...]
 ````
 
-În other words :
+In other words :
 Sequence ID; `_`; sequencing date; `-`; sample code; `_`; the primer used (optionnal).
 
 Exemple :
 ```fasta
 >NTW-6_251027-L7_ITS1F
 ```
-This is the naming convention used by the Fasteris laboratory. However, it's possible to name samples freely as long as the `_` character is avoided.
+This is the naming convention used by the Fasteris laboratory. However, it's possible to name samples freely as long as the underscore character `_` is avoided.
 
 ---
 
 ## Usage
 
 0. Download or git clone the poject from the repo : https://github.com/Henver236/FunBLAST.git
-1. Run once `run_setup.sh`.
-2. Upload the data into a `indata` folder.
+1. Run once `setup.sh`.
+2. Upload your data fasta file into `indata` folder.
 3. Prefix the file name with `source_` 
    (e.g.: `source_My_Fasta_File.fas`)
 4. Launch the pipeline with the command:
@@ -72,16 +80,30 @@ SLURM is used to optimise and schedule ressources usage on HPC cluster.
 
 It is possible to modify the SLURM behavior or run the command locally by editing or removing the SLURM snippet in the wrapper:
 ```bash
-submit-massblaster.sh
+submit_FunBLAST.sh
 ```
 SLURM snippet looks like this :  
 ```bash
-#SBATCH --job-name=MassBLASTer         # Slurm job name.
-#SBATCH --output=slurm-logs/%x_%j.out  # A log output file is created with job name and date/time, and placed in /logs.
-#SBATCH --error=slurm-logs/%x_%j.err   # A log errors file is created with job name and date/time, and placed in /logs.
-#SBATCH --cpus-per-task=8              # Number of CPU cores used. 8 is enough for 20-30 query Megablast. 
-#SBATCH --mem=16G                      # Number of RAM GB used. 16 GB is enough for 20-30 query Megablast.
-#SBATCH --time=01:00:00                # Time allocated to the job. 1 hours is enough for a 20-30 query Megablast.
+    sbatch \
+        --job-name=FunBLAST \
+        --nodes 1 \
+        --cpus-per-task="$CORE" \
+        --mem="${MEM}G" \
+        --time="$TIME" \
+        --output=slurm-logs/%x_%j.out \
+        --error=slurm-logs/%x_%j.err \
+        run-FunBLAST.sh "$FILE"
+``` 
+Here's what it does :  
+```bash
+sbatch                         # Launch a slurm job
+--job-name=FunBLAST            # Slurm job name.
+--output=slurm-logs/%x_%j.out  # A log output file is created with job name and date/time, and placed in /logs.
+--error=slurm-logs/%x_%j.err   # A log errors file is created with job name and date/time, and placed in /logs.
+--cpus-per-task="$CORE"        # Number of CPU cores used. It automatically adjusts according to the number of nucleotides to be processed.
+--mem="${MEM}G"                # Number of RAM GB used. Also automatically adjusted.
+--time="$TIME"                 # Time allocated to the job. Also automatically adjusted.
+
 ```
 Adjuste computational parameters `-num_threads 4` accordingly (see below).
 
@@ -340,6 +362,9 @@ https://unite.ut.ee/
 https://github.com/TU-NHM/massblaster_plutof_pub.git  
 6.	Altschul et al. 1990 – Basic Local Alignment Search Tool  
 https://doi.org/10.1016/S0022-2836(05)80360-2  
+7. NCBI BLAST blastn suite 
+https://blast.ncbi.nlm.nih.gov/Blast.cgi?PROGRAM=blastn&BLAST_SPEC=GeoBlast&PAGE_TYPE=BlastSearch
+
 
 
 

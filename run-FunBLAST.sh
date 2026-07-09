@@ -30,12 +30,15 @@ cp "$FILE" "$USER_DIR/"
 
 cd "$WORK_DIR"
 
+# Apptainer should be available on computing nodes, but, if needed :
+# module load apptainer
+
 # Apptainer + blast in one shot
-apptainer exec massblaster.sif blastn \
+apptainer exec funblast.sif blastn \
     -task megablast \
     -num_threads "$THREADS" \
     -dust no \
-    -db "$WORK_DIR/massblaster_plutof_rel/data/NCBI" \
+    -db "$WORK_DIR/databases/data/NCBI" \
     -outfmt 15 \
     -reward 1 \
     -gapextend 2 \
@@ -59,5 +62,5 @@ rm -rf "$WORK_DIR/userdir/"*
 END=$(date +%s)
 ELAPSED=$((END - START))
 
-printf "[OK] MassBLASTer run time --> %02d:%02d:%02d\n" \
+printf "[OK] FunBLAST run time --> %02d:%02d:%02d\n" \
 $((ELAPSED/3600)) $((ELAPSED%3600/60)) $((ELAPSED%60))

@@ -70,7 +70,7 @@ for FILE in "${FILES[@]}"; do
 
     # Submit job to SLURM scheduler with specified resources and log locations.
     sbatch \
-        --job-name=MassBLASTer \
+        --job-name=FunBLAST \
         --nodes 1 \
         --cpus-per-task="$CORE" \
         --mem="${MEM}G" \
@@ -79,7 +79,7 @@ for FILE in "${FILES[@]}"; do
         --error=slurm-logs/%x_%j.err \
         run-FunBLAST.sh "$FILE"
 
-    echo "[INFO] $FILE is now processed with MassBLASTer..."
+    echo "[INFO] $FILE is now processed with FunBLAST... Please wait..."
 
 done
 # End of main loop.
@@ -92,7 +92,7 @@ done
 sleep 1
 
 # Get the most recent job with this name for this user
-JOB_ID=$(squeue -u "$USER" -n MassBLASTer -h -o "%A %V" \
+JOB_ID=$(squeue -u "$USER" -n FunBLAST -h -o "%A %V" \
     | sort -k2 -r \
     | head -n1 \
     | awk '{print $1}')
@@ -100,7 +100,7 @@ JOB_ID=$(squeue -u "$USER" -n MassBLASTer -h -o "%A %V" \
 echo "[INFO] Job ID : $JOB_ID"
 
 # Get the Slurm log file using job id
-LOG_FILE="slurm-logs/MassBLASTer_${JOB_ID}.out"
+LOG_FILE="slurm-logs/FunBLAST_${JOB_ID}.out"
 
 echo "[INFO] Monitoring job $JOB_ID..."
 
