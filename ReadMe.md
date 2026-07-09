@@ -5,7 +5,7 @@
 This software is inspired by MassBLASTer PlutoF pipeline, developped by Kessy Abarenkov for UNITE PlutoF Biodiversity cloud Workbench (Biodiversity Informatics research group of Tartu Univeristy). Here is the adresse of the PlutoF project:  
 https://github.com/TU-NHM/massblaster_plutof_pub   
 
-The author of this software provides the code “as‑is” and makes no warranties regarding its performance, accuracy, or suitability for any particular purpose. Consequently, the author cannot be held responsible for the quality, correctness, or any consequences arising from the results generated with this pipeline. Users assume all risk associated with its deployment and should verify outputs independently before relying on them. FunBLAST is 
+The author of this software provides the code “as‑is” and makes no warranties regarding its performance, accuracy, or suitability for any particular purpose. Consequently, the author cannot be held responsible for the quality, correctness, or any consequences arising from the results generated with this pipeline. Users assume all risk associated with its deployment and should verify outputs independently before relying on them. 
 
 ## Rationale
 
