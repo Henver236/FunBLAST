@@ -4,17 +4,18 @@
 
 This software is inspired by MassBLASTer PlutoF pipeline, developped by Kessy Abarenkov for UNITE PlutoF Biodiversity cloud Workbench (Biodiversity Informatics research group of Tartu Univeristy). Here is the adresse of the PlutoF project:  
 https://github.com/TU-NHM/massblaster_plutof_pub   
+While the implementation has been rewritten and extended (Apptainer build process, SLURM integration, automated output formatting, and revised setup workflow), I gratefully acknowledge the author of the original project for inspiring this work.
 
 The author of this software provides the code “as‑is” and makes no warranties regarding its performance, accuracy, or suitability for any particular purpose. Consequently, the author cannot be held responsible for the quality, correctness, or any consequences arising from the results generated with this pipeline. Users assume all risk associated with its deployment and should verify outputs independently before relying on them. 
 
 ## Rationale
 
 The ITS regions (ITS1 and ITS2) are widely used for biomolecular identification of fungi. 
-Nowadays, there are two main databases, each with their own sequence processing portal: UNITE and NCBI. 
+Nowadays, there are two main databases, each with their own sequence processing platform: UNITE and NCBI. 
 The most developed and widely used software is BLAST. However, BLAST works on the NCBI database by default, whereas UNITE has become a reference when it comes to ITS sequence taxonomic assignment. 
 Moreover, it has become very clear today, in the global context, that researchers need local and open resources, not subject to a political agenda. 
 
-FunBLAST provides a way to blast a large number of ITS sequences against the UNITE database (or NCBI "from type material" database), in the style of the NCBI BLASTn web page, with local and updatable database files and a locally hosted BLAST algorithm.
+FunBLAST provides a way to blast a large number of ITS sequences against the UNITE database (or NCBI "from type material" database optionnaly), in the style of the NCBI BLASTn web page, with local and updatable database files and a locally hosted BLAST algorithm.
 
 ## Description
 
@@ -119,33 +120,36 @@ https://conmeehan.github.io/blast+tutorial.html
 https://www.i.animalgenome.org/bioinfo/resources/manuals/blast2.2.24/user_manual.pdf  
 https://www.biob.in/2020/12/creating-custom-database-using.html  
 
-### Line by line description of MassBLASTer launch command
+### Line by line description of FunBLAST launch command
 
 ```bash
-./massblaster.sif /run_massblaster.sh "$CLEAN_NAME" \
-    -num_threads 4 \
+apptainer exec funblast.sif blastn \
+    -task megablast \
+    -num_threads "$THREADS" \
     -dust no \
-    -db "/massblaster_plutof_rel/data/plutof_fungi_its" \
+    -db "$WORK_DIR/databases/data/UNITE" \
     -outfmt 15 \
     -reward 1 \
     -gapextend 2 \
-    -max_target_seqs 3 \
+    -max_target_seqs 10 \
     -penalty -2 \
     -word_size 28 \
-    -gapopen 0
+    -gapopen 0 \
+    -query "$USER_DIR/source_$RUN_ID" \
+    -out "$USER_DIR/result.txt"
 ```
 ---
 
 ###  Main command line
-`./massblaster.sif /run_massblaster.sh "$CLEAN_NAME"`  
-This command runs the Massblaster pipeline inside an Apptainer (Singularity) container (massblaster.sif).
-The script internally launches a BLAST+ nucleotide alignment (likely blastn or megablast) to compare query sequences ($CLEAN_NAME) against a local reference database (check -db section below).
+`apptainer exec funblast.sif blastn \`  
+This command runs the FunBLAST pipeline inside an Apptainer (Singularity) container (funblast.sif).
+The script internally launches a BLAST+ nucleotide alignment (likely blastn or megablast) to compare query sequences ($USER_DIR/source_$RUN_ID) against a local reference database (check -db section below).
 
 ---
 ### Computational parameters  
-`-num_threads 4`  
+`-num_threads "$THREADS"`  
 
-Number of CPU threads (logical cores) used to parallelize the BLAST search. (in this exemple: 4 threads).
+Number of CPU threads (logical cores) used to parallelize the BLAST search. This variable is given by sumbit_FunBLAST.sh load scale process.
 
 Possible values : Integer  
 Tipically between 2 to 64, depends of hardware limitations.
@@ -171,10 +175,10 @@ Possible values: Boolean ("yes" / "no")
 
 ---
 ### Reference database  
-`-db "/massblaster_plutof_rel/data/plutof_fungi_its"`  
+`-db "$WORK_DIR/databases/data/UNITE"`  
 
 Database against which the sequences are compare. 
-In this example it's  `plutof_fungi_its`
+In this example it's  `UNITE`
 
 Other database options are available :
 ```bash
@@ -206,7 +210,7 @@ https://unite.ut.ee/repository.php
 
 Plutof1, plutof2, etc... are alias files. You can create your own.  
 Or, instead, you can refer to a groupe of BLAST database files, simply by avoiding using the file format in the path :
-`-db "/massblaster_plutof_rel/data/custom_version_of_database"`  
+`-db "$WORK_DIR/databases/data/custom_version_of_database"`  
 In this exemple, the command refere to all database files who start with a name like "custom_version_of_database", that's to say :  
 ```text
 custom_version_of_database.ndb  
@@ -232,8 +236,7 @@ JSON file as output is not easy to read but it have advantages :
 So it's easier to use it for results visualisation and downstream analysis. 
 
 Default :
-Output format is JSON (standard BLAST format 15). 
-However, for an unknown reason, output JSON file has a .txt extension. 
+Output format is JSON (standard BLAST format 15).  
 Possible values : Integer  
 
 ---
@@ -284,10 +287,10 @@ Possible values : Integer
 
 ---
 ### Hits limit number  
-`-max_target_seqs 3`  
+`-max_target_seqs 10`  
 Maximum number of target sequences (hits) reported for each query.  
 Default:  
-Keep only the three best hits.   
+Keep only the best hit.   
 It's possible (recommanded) to customise this option to retrieve 10, or more hits by query.
 Possible values : Integer  
 
@@ -297,7 +300,7 @@ Possible values : Integer
 Size of the initial exact match seed used by BLAST.  
 Default:  
 Seed word length = 28 bases.  
-This is unusually long for classic BLASTN but it's align with MassBLASTER’s strategy: stricter matches, less noise, and only serious hits retained.  
+This is unusually long for classic BLASTn but it's align with the following strategy: stricter matches, less noise, and only serious hits retained.  
 If I understand correctly, BLAST's algorithm starts by searching for a perfect match of 28 consecutive nucleotides between the query and sequences in the database. And only then does the algorithm begin to process the similarity of the entire sequence, or sorting best hits.  
 
 
@@ -316,7 +319,7 @@ This script is launched by submit-FunBLAST.sh.
 It will launch BLAST and give the primary output (a JSON file with a .txt extension) to format-output.py.
 
 #### ► format-output.py  
-A script that create a CSV file woth all the results and use it to create a HTML page.
+A script that create a CSV file with all the results and use it to create a HTML page.
 Then, this HTML page can be used to display and explore results, a little bit like a NCBI blastn results page. 
 
 ### Beta version scripts (maybe not available or not working properly)

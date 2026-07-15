@@ -3,15 +3,12 @@
 /indata
 /slurm-logs
 /output
-/massblaster_plutof_rel
+/databases
 
 format-output-old.py
-WID-MassBLASTer-ITS_260413.sh
-massblaster.sif
-massblaster_plutof.def
-massblaster.def
+WID-FunBLAST-ITS_260413.sh
+funblast.sif
 
-run_massblaster_pipeline_progress.sh
-submit_massblaster_progress.sh
+run_FunBLAST_progress.sh
+submit_FunBLAST_progress.sh
 
-LICENSE

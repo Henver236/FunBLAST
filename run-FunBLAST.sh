@@ -38,7 +38,7 @@ apptainer exec funblast.sif blastn \
     -task megablast \
     -num_threads "$THREADS" \
     -dust no \
-    -db "$WORK_DIR/databases/data/NCBI" \
+    -db "$WORK_DIR/databases/data/UNITE" \
     -outfmt 15 \
     -reward 1 \
     -gapextend 2 \
