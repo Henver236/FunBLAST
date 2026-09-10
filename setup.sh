@@ -66,4 +66,4 @@ fi
 export BLAST_DB="$PWD/databases"
 
 # end here
-echo "[Info] Setup is done !"
+echo "[Info] FunBLAST setup is done !"
