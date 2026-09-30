@@ -4,6 +4,8 @@ From: ubuntu:26.04
 %post
     set -e
 
+    chmod 1777 /tmp
+    
     # Update distro and install wget, libgomp1, and certificates : 
     apt update && apt install -y \
         wget \
