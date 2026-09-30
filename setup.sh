@@ -1,4 +1,8 @@
-#!/usr/bin/env bash
+#!/usr/bin/bash
+
+echo "[Info] Running on $(hostname)"
+echo "[Info] Slurm job ID: $SLURM_JOB_ID"
+echo "[Info] Allocated node(s): $SLURM_JOB_NODELIST"
 
 # Create input and output data directories for FunBLAST :
 echo "[Info] Creating input and output directories for FunBLAST ..."

@@ -1,4 +1,10 @@
-#!/usr/bin/env bash
+#!/usr/bin/bash
+#SBATCH --job-name=FunBLAST-Submit
+#SBATCH --output=slurm-logs/%x_%j.out
+#SBATCH --error=slurm-logs/%x_%j.err
+#SBATCH --cpus-per-task=2
+#SBATCH --mem=4G
+#SBATCH --time=00:10:00
 
 # Enforce strict error handling and more reliable pipelines.
 set -euo pipefail
