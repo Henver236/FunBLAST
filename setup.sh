@@ -1,11 +1,11 @@
 #!/usr/bin/bash
 
-echo "[Info] Running on $(hostname)"
-echo "[Info] Slurm job ID: $SLURM_JOB_ID"
-echo "[Info] Allocated node(s): $SLURM_JOB_NODELIST"
+echo "--> [Info] Running on $(hostname)"
+echo "--> [Info] Slurm job ID: $SLURM_JOB_ID"
+echo "--> [Info] Allocated node(s): $SLURM_JOB_NODELIST"
 
 # Create input and output data directories for FunBLAST :
-echo "[Info] Creating input and output directories for FunBLAST ..."
+echo "--> [Info] Creating input and output directories for FunBLAST ..."
 mkdir -p indata
 mkdir -p userdir
 mkdir -p outdata
@@ -14,20 +14,20 @@ mkdir -p slurm-logs
 
 # Create FunBLAST container from funblast.def with security question :
 if [ -f funblast.sif ]; then
-    read -r -p "[Warning] Container already exists. Replace it? [y/N] " reply
+    read -r -p "--> [Warning] Container already exists. Replace it? [y/N] " reply
     reply=${reply:-n}
 
     case "$reply" in
         y|Y|yes|YES|Yes)
-            echo "[Info] Rebuilding container..."
+            echo "--> [Info] Rebuilding container..."
             apptainer build funblast.sif funblast.def
             ;;
         *)
-            echo "Skipping build."
+            echo "--> Skipping build."
             ;;
     esac
 else
-    echo "[Info] Start building container..."
+    echo "--> [Info] Start building container..."
     apptainer build funblast.sif funblast.def
 fi
 
@@ -41,7 +41,7 @@ DB_DIR="databases"
 DOWNLOAD_DB=1
 
 if [ -d "$DB_DIR" ]; then
-    read -r -p "[Warning] BLAST database already exists. Replace it? [y/N] " reply
+    read -r -p "--> [Warning] BLAST database already exists. Replace it? [y/N] " reply
     reply=${reply:-n}
 
     case "$reply" in
@@ -57,24 +57,27 @@ if [ -d "$DB_DIR" ]; then
 fi
 
 if [ "$DOWNLOAD_DB" -eq 1 ]; then
-    echo "[Info] Downloading BLAST database..."
+    echo "--> [Info] Downloading BLAST database..."
     wget -O "$DB_ARCHIVE" "https://s3.hpc.ut.ee/plutof-public/original/780b17f2-e53a-4631-9adf-9964963bf1ff.gz"
 
-    echo "[Info] Extracting database..."
+    echo "--> [Info] Extracting database..."
     tar -xzf "$DB_ARCHIVE"
 
-    echo "[Info] Cleaning up..."
+    echo "--> [Info] Cleaning up..."
     rm -f "$DB_ARCHIVE"
+
+    mv massblaster_plutof_rel databases
+
 fi
 
 export BLAST_DB="$PWD/databases"
 
 # Control if the apptainer container have been created :
 if [ -f funblast.sif ]; then
-    echo "[Info] FunBLAST setup is successfully done !"
+    echo "--> [Info] FunBLAST setup is successfully done !"
 else
-    echo "[Warning] FunBLAST container has not been created..."
+    echo "--> [Warning] FunBLAST container has not been created..."
 fi
 
 # end here
-echo "[Info] End of setup."
+echo "---------------------------- End of Setup -------------------------------"
