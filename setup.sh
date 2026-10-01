@@ -69,5 +69,14 @@ fi
 
 export BLAST_DB="$PWD/databases"
 
+# Control if the apptainer container have been created :
+if [ -f funblast.sif ]; then
+    read -r -p "[Info] FunBLAST setup is successfully done !" 
+
+else
+    echo "[Warning] FunBLAST container has not been created..."
+    
+fi
+
 # end here
-echo "[Info] FunBLAST setup is done !"
+echo "[Info] End of setup."
