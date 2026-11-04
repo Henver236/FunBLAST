@@ -19,10 +19,10 @@ OUTPUT_BASE = BASE_DIR / "output"
 timestamp = datetime.now().strftime("%Y%m%d_%H%M")
 today_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-FINAL_OUTPUT_DIR = OUTPUT_BASE / f"MassBLASTer-ITS_{timestamp}"
+FINAL_OUTPUT_DIR = OUTPUT_BASE / f"FunBLAST-ITS_{timestamp}"
 FINAL_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
-CSV_OUT = FINAL_OUTPUT_DIR / f"Massblaster-ITS_{timestamp}.csv"
+CSV_OUT = FINAL_OUTPUT_DIR / f"FunBLAST-ITS_{timestamp}.csv"
 
 # ──────────────────────────────────────────────
 # CSV
@@ -227,7 +227,7 @@ html {{
 </head>
 <body id="top">
 
-<h1>MassBLASTer</h1>
+<h1>FunBLAST</h1>
 <p><b>Sequenced on:</b> {seq_date}</p>
 <p><b>BLASTed on:</b> {today_str}</p>
 <p><b>From:</b> {escape(fasta_name)}</p>

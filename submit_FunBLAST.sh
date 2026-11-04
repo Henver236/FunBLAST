@@ -21,7 +21,7 @@ mkdir -p slurm-logs
 
 # Enable nullglob to avoid unmatched patterns and list input FASTA files.
 shopt -s nullglob
-FILES=("$INPUT_DIR"/source_*.fas)
+FILES=("$INPUT_DIR"/source_*.fas*)
 
 # Check for input files and exit if none found.
 if [ ${#FILES[@]} -eq 0 ]; then
@@ -50,10 +50,10 @@ for FILE in "${FILES[@]}"; do
         CORE=4; MEM=8; TIME=00:15:00
     elif [ "$TOTAL_BP" -lt 500000 ]; then       # Less than 500'000 bp --> 8 cores / 16 GB RAM / 30 min
         CORE=8; MEM=16; TIME=00:30:00
-    elif [ "$TOTAL_BP" -lt 1000000 ]; then      # Less than 1'000'000 bp --> 8 cores / 16 GB RAM / 1 h
-        CORE=8; MEM=16; TIME=01:00:00
-    elif [ "$TOTAL_BP" -lt 10000000 ]; then     # Less than 10'000'000 bp --> 16 cores / 32 GB RAM / 2 h
-        CORE=16; MEM=32; TIME=02:00:00
+    elif [ "$TOTAL_BP" -lt 1000000 ]; then      # Less than 1'000'000 bp --> 16 cores / 16 GB RAM / 1 h
+        CORE=16; MEM=16; TIME=01:00:00
+    elif [ "$TOTAL_BP" -lt 10000000 ]; then     # Less than 10'000'000 bp --> 24 cores / 32 GB RAM / 2 h
+        CORE=24; MEM=32; TIME=02:00:00
     elif [ "$TOTAL_BP" -lt 500000000 ]; then    # Less than 500'000'000 bp --> 32 cores / 64 GB RAM / 3 h
         CORE=32; MEM=64; TIME=03:00:00
     else
