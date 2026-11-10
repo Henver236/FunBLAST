@@ -4,6 +4,8 @@
 /slurm-logs
 /output
 /databases
+/input
+/input-trimmed
 
 format-output-old.py
 WID-FunBLAST-ITS_260413.sh
