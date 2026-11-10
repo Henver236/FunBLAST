@@ -38,7 +38,7 @@ apptainer exec funblast.sif blastn \
     -task megablast \
     -num_threads "$THREADS" \
     -dust no \
-    -db "$WORK_DIR/databases/data/UNITE" \
+    -db "$WORK_DIR/databases/data/NCBI" \
     -outfmt 15 \
     -reward 1 \
     -gapextend 2 \
@@ -53,7 +53,7 @@ apptainer exec funblast.sif blastn \
 mv "$USER_DIR/result.txt" "$OUTDATA_DIR/"
 
 # Post-processing
-python3 "$BASE_DIR/format-output.py"
+python3 "$BASE_DIR/FunBLAST-format-output.py"
 
 # Cleanup
 rm -rf "$WORK_DIR/outdata/"*
